@@ -51,7 +51,9 @@ class S3 < Mapper
           { func: 'get_bucket_tagging', key: 'tagging', field: nil },
           { func: 'get_bucket_logging', key: 'logging', field: 'logging_enabled' },
           { func: 'get_bucket_versioning', key: 'versioning', field: nil },
-          { func: 'get_bucket_website', key: 'website', field: nil }
+          { func: 'get_bucket_website', key: 'website', field: nil },
+          { func: 'get_object_lock_configuration', key: 'object_lock_configuration', field: 'object_lock_configuration' },
+          { func: 'get_bucket_accelerate_configuration', key: 'acceleration_configuration', field: nil }
         ]
 
         operations.each do |operation|
@@ -66,8 +68,7 @@ class S3 < Mapper
                            end
 
         rescue Aws::S3::Errors::ServiceError => e
-          log_error(e.code)
-
+          log_error(response.context.operation_name, bucket.name, op.func, e.code) unless missing_conf_errors.include?(e.code)
           raise e unless suppressed_errors.include?(e.code) && !@options.quit_on_exception
         end
 
@@ -80,6 +81,19 @@ class S3 < Mapper
 
   private
 
+  # not an error & no need to log either
+  def missing_conf_errors
+    %w[
+      ServerSideEncryptionConfigurationNotFoundError
+      NoSuchBucketPolicy
+      NoSuchTagSet
+      NoSuchWebsiteConfiguration
+      ReplicationConfigurationNotFoundError
+      NoSuchPublicAccessBlockConfiguration
+      ObjectLockConfigurationNotFoundError
+    ]
+  end
+
   # not an error
   def suppressed_errors
     %w[
@@ -90,6 +104,7 @@ class S3 < Mapper
       NoSuchWebsiteConfiguration
       ReplicationConfigurationNotFoundError
       NoSuchPublicAccessBlockConfiguration
+      ObjectLockConfigurationNotFoundError
     ]
   end
 end

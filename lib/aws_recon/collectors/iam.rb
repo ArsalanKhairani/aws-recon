@@ -127,8 +127,7 @@ class IAM < Mapper
         resources.push(struct.to_h)
       end
     rescue Aws::IAM::Errors::ServiceError => e
-      log_error(e.code)
-
+      log_error("password_policy", e.code)
       raise e unless suppressed_errors.include?(e.code) && !@options.quit_on_exception
     end
 
@@ -210,8 +209,7 @@ class IAM < Mapper
         resources.push(struct.to_h)
       end
     rescue Aws::IAM::Errors::ServiceError => e
-      log_error(e.code)
-
+      log_error("credential_report", e.code)
       raise e unless suppressed_errors.include?(e.code) && !@options.quit_on_exception
     end
 
