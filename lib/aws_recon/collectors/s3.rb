@@ -54,6 +54,7 @@ class S3 < Mapper
           { func: 'get_bucket_website', key: 'website', field: nil },
           { func: 'get_object_lock_configuration', key: 'object_lock_configuration', field: 'object_lock_configuration' },
           { func: 'get_bucket_accelerate_configuration', key: 'acceleration_configuration', field: nil }
+          { func: 'get_bucket_lifecycle', key: 'lifecycle_configuration', field: nil }
         ]
 
         operations.each do |operation|
