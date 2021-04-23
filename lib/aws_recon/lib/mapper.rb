@@ -68,10 +68,10 @@ class Mapper
   def log(*msg)
     return unless @options.verbose
 
-    puts _msg(msg).map { |x| "\x1b[32m#{x}\x1b[0m" }.join("\x1b[35m.\x1b[0m")
+    puts _msg(msg).map(&:to_s).join('.')
   end
 
   def log_error(*msg)
-    puts _msg(msg).map { |x| "\x1b[35m#{x}\x1b[0m" }.join("\x1b[32m.\x1b[0m")
+    puts _msg(msg).map(&:to_s).join('.')
   end
 end

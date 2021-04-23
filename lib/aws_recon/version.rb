@@ -1,3 +1,3 @@
 module AwsRecon
-  VERSION = "0.3.4-1p"
+  VERSION = "0.5.6-1p"
 end

@@ -48,11 +48,11 @@ class S3 < Mapper
           { func: 'get_bucket_policy', key: 'policy', field: 'policy' },
           { func: 'get_bucket_policy_status', key: 'public', field: 'policy_status' },
           { func: 'get_public_access_block', key: 'public_access_block', field: 'public_access_block_configuration' },
+          { func: 'get_object_lock_configuration', key: 'object_lock_configuration', field: 'object_lock_configuration' },
           { func: 'get_bucket_tagging', key: 'tagging', field: nil },
           { func: 'get_bucket_logging', key: 'logging', field: 'logging_enabled' },
           { func: 'get_bucket_versioning', key: 'versioning', field: nil },
           { func: 'get_bucket_website', key: 'website', field: nil },
-          { func: 'get_object_lock_configuration', key: 'object_lock_configuration', field: 'object_lock_configuration' },
           { func: 'get_bucket_accelerate_configuration', key: 'acceleration_configuration', field: nil },
           { func: 'get_bucket_lifecycle', key: 'lifecycle_configuration', field: nil }
         ]
@@ -75,6 +75,9 @@ class S3 < Mapper
         end
 
         resources.push(struct.to_h)
+
+      rescue Aws::S3::Errors::NoSuchBucket
+        # skip missing bucket
       end
     end
 
